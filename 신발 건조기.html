@@ -1,0 +1,388 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1830">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>신발 건조기</title>
+<style>
+:root{
+  --bg:#0f1830; --panel:#17233f; --panel2:#1d2b4d; --line:#2a3b63;
+  --text:#e8eefc; --muted:#8fa0c4; --cyan:#22d3ee; --cyan-d:#0e7490;
+  --heat:#fb923c; --fan:#38bdf8; --uv:#c084fc; --ok:#4ade80; --warn:#fbbf24; --bad:#f87171;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);
+  font-family:"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif}
+body{padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 24px)}
+.wrap{max-width:720px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+h1{font-size:20px;margin:0;letter-spacing:.5px}
+h1 small{display:block;font-size:12px;color:var(--muted);font-weight:normal;margin-top:2px}
+.conn{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;background:#55627f}
+.dot.on{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.dot.wait{background:var(--warn);animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.3}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.btn{border:none;border-radius:12px;padding:12px 16px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;
+  background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.btn.primary{background:var(--cyan);color:#062033;border-color:var(--cyan)}
+.btn:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row .btn{flex:1}
+.notice{font-size:13px;line-height:1.6;color:#fde68a;background:#3a2f12;border:1px solid #6b5418;
+  border-radius:12px;padding:12px 14px;margin-bottom:12px;display:none}
+.notice b{color:#fff}
+.hero{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.temp{font-size:64px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.temp span{font-size:24px;color:var(--muted);font-weight:600;margin-left:4px}
+.sub{color:var(--muted);font-size:14px;margin-top:8px}
+.power{width:118px;height:118px;border-radius:50%;border:3px solid var(--line);background:var(--panel2);
+  color:var(--muted);font:inherit;font-size:15px;font-weight:800;cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;transition:.2s}
+.power svg{width:38px;height:38px}
+.power.on{border-color:var(--ok);color:var(--ok);box-shadow:0 0 24px rgba(74,222,128,.35);background:#163a2a}
+.power:disabled{opacity:.4;cursor:default}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.chip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 8px;text-align:center;
+  font-size:13px;color:var(--muted)}
+.chip b{display:block;font-size:15px;color:#5b6a8c;margin-top:2px}
+.chip.on.heat b{color:var(--heat)} .chip.on.fan b{color:var(--fan)} .chip.on.uv b{color:var(--uv)}
+.chip.on.ok b{color:var(--ok)} .chip.on.warn b{color:var(--warn)} .chip.on.bad b{color:var(--bad)}
+.label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--muted);margin-bottom:10px}
+.label b{font-size:22px;color:var(--text)}
+input[type=range]{width:100%;accent-color:var(--cyan);height:28px}
+.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.seg button{padding:11px 0;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);
+  font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.seg button.sel{background:var(--cyan);color:#062033;border-color:var(--cyan)}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.toggle p{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.sw{position:relative;width:58px;height:32px;flex:none}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:#33415f;border-radius:32px;transition:.2s;cursor:pointer}
+.sw span:before{content:"";position:absolute;width:26px;height:26px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+span{background:var(--uv)}
+.sw input:checked+span:before{transform:translateX(26px)}
+canvas{width:100%;height:190px;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.disabled{opacity:.45;pointer-events:none}
+.log{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--muted);max-height:110px;overflow:auto;white-space:pre-wrap}
+details summary{cursor:pointer;color:var(--muted);font-size:13px}
+@media (max-width:480px){.temp{font-size:52px}.power{width:100px;height:100px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>👟 스마트 신발 건조기<small>BLE 원격 제어 · 실시간 온도</small></h1>
+    <div class="conn"><div id="dot" class="dot"></div><span id="connTxt">연결 안 됨</span></div>
+  </header>
+
+  <div id="noBle" class="notice">
+    이 브라우저는 블루투스(Web Bluetooth)를 지원하지 않아요.<br>
+    <b>iPhone·iPad:</b> App Store의 <b>Bluefy</b> 브라우저로 이 페이지를 여세요.<br>
+    <b>Android·PC:</b> <b>Chrome</b>으로 여세요. (https 주소 필요)<br>
+    하드웨어 없이 화면을 보려면 아래 <b>데모 모드</b>를 누르세요.
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <button id="btnConn" class="btn primary">🔵 건조기 연결</button>
+      <button id="btnDemo" class="btn">🧪 데모 모드</button>
+    </div>
+  </div>
+
+  <div id="ctrl" class="disabled">
+    <div class="card">
+      <div class="hero">
+        <div>
+          <div class="temp" id="temp">--.-<span>°C</span></div>
+          <div class="sub" id="sub">목표 --°C · 대기 중</div>
+        </div>
+        <button id="btnPower" class="power" aria-label="전원">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg>
+          <span id="powerTxt">OFF</span>
+        </button>
+      </div>
+      <div class="chips">
+        <div class="chip heat" id="cHeat">히터<b>OFF</b></div>
+        <div class="chip fan" id="cFan">팬<b>OFF</b></div>
+        <div class="chip uv" id="cUv">UV<b>OFF</b></div>
+        <div class="chip ok" id="cShoe">신발<b>없음</b></div>
+        <div class="chip warn" id="cTime">남은 시간<b>--</b></div>
+        <div class="chip bad" id="cSensor">센서<b>정상</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="legend" style="margin:0 0 8px"><span><i style="background:var(--cyan)"></i>현재 온도</span><span><i style="background:var(--heat)"></i>목표 온도</span><span id="chartInfo" style="margin-left:auto">최근 5분</span></div>
+      <canvas id="chart"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="label">목표 온도 <b id="spVal">55°C</b></div>
+      <input id="sp" type="range" min="35" max="70" step="1" value="55">
+    </div>
+
+    <div class="card">
+      <div class="label">건조 시간 <b id="durVal">30분</b></div>
+      <div class="seg" id="dur">
+        <button data-v="15">15분</button><button data-v="30">30분</button><button data-v="60">60분</button>
+        <button data-v="90">90분</button><button data-v="0">무제한</button>
+      </div>
+    </div>
+
+    <div class="card toggle">
+      <div><b>UV 살균</b><p>신발이 감지되고 전원이 켜져 있을 때만 켜져요.</p></div>
+      <label class="sw"><input id="uv" type="checkbox"><span></span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <details><summary>통신 로그</summary><div class="log" id="log"></div></details>
+  </div>
+</div>
+
+<script>
+var SERVICE = "9f8a0001-6b2c-4d1e-a3f5-1c2d3e4f5a6b";
+var CMD_UUID = "9f8a0002-6b2c-4d1e-a3f5-1c2d3e4f5a6b";
+var STATUS_UUID = "9f8a0003-6b2c-4d1e-a3f5-1c2d3e4f5a6b";
+
+var $ = function (id) { return document.getElementById(id); };
+var device = null, cmdChar = null, demo = null, userDisconnect = false;
+var writeQueue = Promise.resolve();
+var hist = [];          // {t, temp, sp}
+var HIST_MS = 5 * 60 * 1000;
+var state = null;
+var spDragging = false;
+
+function log(msg) {
+  var el = $("log");
+  var t = new Date().toLocaleTimeString("ko-KR", { hour12: false });
+  el.textContent = "[" + t + "] " + msg + "\n" + el.textContent.slice(0, 4000);
+}
+
+function setConn(kind, text) {
+  $("dot").className = "dot" + (kind ? " " + kind : "");
+  $("connTxt").textContent = text;
+  $("ctrl").className = kind === "on" ? "" : "disabled";
+  $("btnConn").textContent = kind === "on" && !demo ? "연결 끊기" : "🔵 건조기 연결";
+  $("btnDemo").textContent = demo ? "데모 종료" : "🧪 데모 모드";
+}
+
+/* ---------- 상태 해석 (펌웨어 6바이트 형식) ---------- */
+function decode(dv) {
+  var t10 = dv.getInt16(0, true), f = dv.getUint8(2);
+  return {
+    temp: t10 === -999 ? null : t10 / 10,
+    power: !!(f & 1), heater: !!(f & 2), fan: !!(f & 4), uv: !!(f & 8),
+    shoe: !!(f & 16), fault: !!(f & 32), uvWanted: !!(f & 64), cooling: !!(f & 128),
+    sp: dv.getUint8(3), rem: dv.getUint8(4), dur: dv.getUint8(5)
+  };
+}
+
+function chip(id, on, txt) {
+  var el = $(id);
+  el.classList.toggle("on", on);
+  el.querySelector("b").textContent = txt;
+}
+
+function render(s) {
+  state = s;
+  $("temp").innerHTML = (s.temp === null ? "--.-" : s.temp.toFixed(1)) + "<span>°C</span>";
+  var mode = s.power ? (s.heater ? "가열 중" : "온도 유지") : (s.cooling ? "냉각 중" : "대기 중");
+  $("sub").textContent = "목표 " + s.sp + "°C · " + mode;
+  $("btnPower").classList.toggle("on", s.power);
+  $("powerTxt").textContent = s.power ? "ON" : "OFF";
+
+  chip("cHeat", s.heater, s.heater ? "ON" : "OFF");
+  chip("cFan", s.fan, s.fan ? (s.cooling ? "냉각" : "ON") : "OFF");
+  chip("cUv", s.uv, s.uv ? "ON" : (s.uvWanted ? "대기" : "OFF"));
+  chip("cShoe", s.shoe, s.shoe ? "감지됨" : "없음");
+  var remTxt = !s.power ? "--" : (s.rem === 255 ? "무제한" : s.rem + "분");
+  chip("cTime", s.power, remTxt);
+  chip("cSensor", s.fault, s.fault ? "오류!" : "정상");
+
+  if (!spDragging) { $("sp").value = s.sp; $("spVal").textContent = s.sp + "°C"; }
+  $("durVal").textContent = s.dur === 0 ? "무제한" : s.dur + "분";
+  Array.prototype.forEach.call($("dur").children, function (b) {
+    b.classList.toggle("sel", +b.dataset.v === s.dur);
+  });
+  $("uv").checked = s.uvWanted;
+
+  var now = Date.now();
+  hist.push({ t: now, temp: s.temp, sp: s.sp });
+  while (hist.length && now - hist[0].t > HIST_MS) hist.shift();
+  drawChart();
+}
+
+/* ---------- 그래프 ---------- */
+function drawChart() {
+  var cv = $("chart"), dpr = window.devicePixelRatio || 1;
+  var w = cv.clientWidth, h = cv.clientHeight;
+  if (cv.width !== w * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+  var g = cv.getContext("2d");
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, w, h);
+
+  var pts = hist.filter(function (p) { return p.temp !== null; });
+  var lo = 20, hi = 80;
+  pts.forEach(function (p) { lo = Math.min(lo, p.temp - 3); hi = Math.max(hi, p.temp + 3); });
+  var L = 34, R = 8, T = 8, B = 20, now = Date.now();
+  var x = function (t) { return L + (w - L - R) * (1 - (now - t) / HIST_MS); };
+  var y = function (v) { return T + (h - T - B) * (1 - (v - lo) / (hi - lo)); };
+
+  g.font = "11px system-ui"; g.fillStyle = "#8fa0c4"; g.strokeStyle = "#2a3b63"; g.lineWidth = 1;
+  for (var v = Math.ceil(lo / 10) * 10; v <= hi; v += 10) {
+    g.beginPath(); g.moveTo(L, y(v)); g.lineTo(w - R, y(v)); g.stroke();
+    g.fillText(v + "°", 4, y(v) + 4);
+  }
+  ["-5분", "-4분", "-3분", "-2분", "-1분", "지금"].forEach(function (s, i) {
+    var xx = L + (w - L - R) * i / 5;
+    g.fillText(s, Math.min(xx - 10, w - 28), h - 4);
+  });
+
+  function line(key, color, dash) {
+    g.strokeStyle = color; g.lineWidth = 2.2; g.setLineDash(dash || []);
+    g.beginPath();
+    var started = false;
+    hist.forEach(function (p) {
+      var val = p[key];
+      if (val === null) { started = false; return; }
+      if (!started) { g.moveTo(x(p.t), y(val)); started = true; } else g.lineTo(x(p.t), y(val));
+    });
+    g.stroke(); g.setLineDash([]);
+  }
+  line("sp", "#fb923c", [6, 5]);
+  line("temp", "#22d3ee");
+}
+window.addEventListener("resize", drawChart);
+
+/* ---------- 명령 전송 ---------- */
+function send(cmd) {
+  log("→ " + cmd);
+  if (demo) { demo.handle(cmd); return; }
+  if (!cmdChar) return;
+  var data = new TextEncoder().encode(cmd);
+  writeQueue = writeQueue.then(function () {
+    return cmdChar.writeValueWithResponse ? cmdChar.writeValueWithResponse(data) : cmdChar.writeValue(data);
+  }).catch(function (e) { log("전송 실패: " + e.message); });
+}
+
+$("btnPower").onclick = function () { send(state && state.power ? "OFF" : "ON"); };
+$("sp").oninput = function () { spDragging = true; $("spVal").textContent = this.value + "°C"; };
+$("sp").onchange = function () { spDragging = false; send("SET:" + this.value); };
+Array.prototype.forEach.call($("dur").children, function (b) {
+  b.onclick = function () { send("TIME:" + b.dataset.v); };
+});
+$("uv").onchange = function () { send(this.checked ? "UV:1" : "UV:0"); };
+
+/* ---------- BLE 연결 ---------- */
+function onStatus(e) { render(decode(e.target.value)); }
+
+async function connectGatt() {
+  setConn("wait", "연결 중…");
+  var server = await device.gatt.connect();
+  var svc = await server.getPrimaryService(SERVICE);
+  cmdChar = await svc.getCharacteristic(CMD_UUID);
+  var st = await svc.getCharacteristic(STATUS_UUID);
+  st.addEventListener("characteristicvaluechanged", onStatus);
+  await st.startNotifications();
+  render(decode(await st.readValue()));
+  setConn("on", device.name || "ShoeDryer");
+  log("연결됨: " + (device.name || device.id));
+}
+
+async function reconnect() {
+  for (var i = 1; i <= 5 && device && !userDisconnect; i++) {
+    setConn("wait", "재연결 시도 " + i + "/5");
+    try { await connectGatt(); return; } catch (e) { log("재연결 실패: " + e.message); }
+    await new Promise(function (r) { setTimeout(r, 2000 * i); });
+  }
+  setConn("", "연결 끊김");
+}
+
+$("btnConn").onclick = async function () {
+  if (demo) stopDemo();
+  if (device && device.gatt.connected) {
+    userDisconnect = true; device.gatt.disconnect(); return;
+  }
+  if (!navigator.bluetooth) { $("noBle").style.display = "block"; return; }
+  try {
+    userDisconnect = false;
+    device = await navigator.bluetooth.requestDevice({
+      filters: [{ services: [SERVICE] }, { namePrefix: "ShoeDryer" }],
+      optionalServices: [SERVICE]
+    });
+    device.addEventListener("gattserverdisconnected", function () {
+      cmdChar = null;
+      log("연결 해제됨");
+      if (userDisconnect) setConn("", "연결 안 됨"); else reconnect();
+    });
+    await connectGatt();
+  } catch (e) {
+    log("연결 실패: " + e.message);
+    setConn("", e.name === "NotFoundError" ? "선택 취소됨" : "연결 실패");
+  }
+};
+
+/* ---------- 데모 모드 (하드웨어 없이 화면 확인) ---------- */
+function startDemo() {
+  var s = { temp: 24, power: false, heater: false, fan: false, uv: false, shoe: true,
+            fault: false, uvWanted: false, cooling: false, sp: 55, rem: 0, dur: 30 };
+  var start = 0;
+  demo = {
+    handle: function (c) {
+      if (c === "ON") { s.power = true; s.cooling = false; start = Date.now(); }
+      else if (c === "OFF") { s.power = false; s.cooling = true; }
+      else if (c.indexOf("SET:") === 0) s.sp = +c.slice(4);
+      else if (c.indexOf("TIME:") === 0) { s.dur = +c.slice(5); start = Date.now(); }
+      else if (c === "UV:1") s.uvWanted = true;
+      else if (c === "UV:0") s.uvWanted = false;
+      tick();
+    },
+    timer: setInterval(function () { tick(); }, 1000)
+  };
+  function tick() {
+    if (s.power) {
+      if (s.temp <= s.sp - 3) s.heater = true; else if (s.temp >= s.sp) s.heater = false;
+      s.fan = true; s.uv = s.uvWanted && s.shoe;
+      var left = s.dur ? s.dur * 60000 - (Date.now() - start) : -1;
+      s.rem = s.dur ? Math.max(0, Math.ceil(left / 60000)) : 255;
+      if (s.dur && left <= 0) { s.power = false; s.cooling = true; }
+    } else {
+      s.heater = false; s.uv = false; s.rem = 0;
+      if (s.cooling && s.temp < 40) s.cooling = false;
+      s.fan = s.cooling;
+    }
+    s.temp += s.heater ? 0.9 : (s.fan ? -0.5 : -0.15);
+    s.temp = Math.max(22, s.temp) + (Math.random() - 0.5) * 0.2;
+    render(JSON.parse(JSON.stringify(s)));
+  }
+  setConn("on", "데모 모드");
+  log("데모 모드 시작");
+  tick();
+}
+function stopDemo() {
+  clearInterval(demo.timer); demo = null; hist = []; drawChart();
+  setConn("", "연결 안 됨");
+}
+$("btnDemo").onclick = function () {
+  if (demo) { stopDemo(); return; }
+  if (device && device.gatt.connected) { userDisconnect = true; device.gatt.disconnect(); }
+  startDemo();
+};
+
+if (!navigator.bluetooth) $("noBle").style.display = "block";
+drawChart();
+</script>
+</body>
+</html>
+
+</body></html>
