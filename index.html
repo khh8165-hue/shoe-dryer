@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -11,8 +10,8 @@
 <style>
 :root{
   --bg:#0f1830; --panel:#17233f; --panel2:#1d2b4d; --line:#2a3b63;
-  --text:#e8eefc; --muted:#8fa0c4; --cyan:#22d3ee; --cyan-d:#0e7490;
-  --heat:#fb923c; --fan:#38bdf8; --uv:#c084fc; --ok:#4ade80; --warn:#fbbf24; --bad:#f87171;
+  --text:#e8eefc; --muted:#8fa0c4; --cyan:#22d3ee;
+  --low:#fbbf24; --high:#fb7185; --uv:#c084fc; --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --heat:#fb923c;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);
@@ -28,38 +27,38 @@ h1 small{display:block;font-size:12px;color:var(--muted);font-weight:normal;marg
 .dot.wait{background:var(--warn);animation:bl 1s infinite}
 @keyframes bl{50%{opacity:.3}}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
-.btn{border:none;border-radius:12px;padding:12px 16px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;
+.btn{border-radius:12px;padding:12px 16px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;
   background:var(--panel2);color:var(--text);border:1px solid var(--line)}
 .btn.primary{background:var(--cyan);color:#062033;border-color:var(--cyan)}
-.btn:disabled{opacity:.4;cursor:default}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row .btn{flex:1}
 .notice{font-size:13px;line-height:1.6;color:#fde68a;background:#3a2f12;border:1px solid #6b5418;
   border-radius:12px;padding:12px 14px;margin-bottom:12px;display:none}
 .notice b{color:#fff}
-.hero{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
 .temp{font-size:64px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
 .temp span{font-size:24px;color:var(--muted);font-weight:600;margin-left:4px}
-.sub{color:var(--muted);font-size:14px;margin-top:8px}
-.power{width:118px;height:118px;border-radius:50%;border:3px solid var(--line);background:var(--panel2);
-  color:var(--muted);font:inherit;font-size:15px;font-weight:800;cursor:pointer;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:4px;transition:.2s}
-.power svg{width:38px;height:38px}
-.power.on{border-color:var(--ok);color:var(--ok);box-shadow:0 0 24px rgba(74,222,128,.35);background:#163a2a}
-.power:disabled{opacity:.4;cursor:default}
+.sub{color:var(--muted);font-size:15px;margin-top:8px}
+.sub b{color:var(--text)}
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
 .chip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 8px;text-align:center;
   font-size:13px;color:var(--muted)}
 .chip b{display:block;font-size:15px;color:#5b6a8c;margin-top:2px}
-.chip.on.heat b{color:var(--heat)} .chip.on.fan b{color:var(--fan)} .chip.on.uv b{color:var(--uv)}
-.chip.on.ok b{color:var(--ok)} .chip.on.warn b{color:var(--warn)} .chip.on.bad b{color:var(--bad)}
-.label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--muted);margin-bottom:10px}
-.label b{font-size:22px;color:var(--text)}
-input[type=range]{width:100%;accent-color:var(--cyan);height:28px}
-.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.seg button{padding:11px 0;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);
-  font:inherit;font-weight:700;font-size:14px;cursor:pointer}
-.seg button.sel{background:var(--cyan);color:#062033;border-color:var(--cyan)}
+.chip.on.heat b{color:var(--heat)} .chip.on.uv b{color:var(--uv)}
+.chip.on.ok b{color:var(--ok)} .chip.on.bad b{color:var(--bad)}
+.bar{height:6px;border-radius:3px;background:#2a3655;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--heat);transition:width .4s}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mode{padding:18px 6px;border-radius:14px;border:2px solid var(--line);background:var(--panel2);color:var(--text);
+  font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.mode b{font-size:18px}
+.mode small{font-size:13px;color:var(--muted)}
+.mode.low.sel{border-color:var(--low);background:#3a2f12;box-shadow:0 0 18px rgba(251,191,36,.25)}
+.mode.low.sel b{color:var(--low)}
+.mode.high.sel{border-color:var(--high);background:#3d1724;box-shadow:0 0 18px rgba(251,113,133,.25)}
+.mode.high.sel b{color:var(--high)}
+.mode.stop{border-color:#4b5563}
+.mode.stop b{color:#cbd5e1}
+.hint{font-size:12px;color:var(--muted);margin-top:10px}
 .toggle{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .toggle p{margin:4px 0 0;font-size:12px;color:var(--muted)}
 .sw{position:relative;width:58px;height:32px;flex:none}
@@ -69,12 +68,12 @@ input[type=range]{width:100%;accent-color:var(--cyan);height:28px}
 .sw input:checked+span{background:var(--uv)}
 .sw input:checked+span:before{transform:translateX(26px)}
 canvas{width:100%;height:190px;display:block}
-.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-bottom:8px}
 .legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
 .disabled{opacity:.45;pointer-events:none}
 .log{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--muted);max-height:110px;overflow:auto;white-space:pre-wrap}
 details summary{cursor:pointer;color:var(--muted);font-size:13px}
-@media (max-width:480px){.temp{font-size:52px}.power{width:100px;height:100px}}
+@media (max-width:480px){.temp{font-size:52px}.mode b{font-size:16px}}
 </style>
 </head>
 <body>
@@ -100,47 +99,35 @@ details summary{cursor:pointer;color:var(--muted);font-size:13px}
 
   <div id="ctrl" class="disabled">
     <div class="card">
-      <div class="hero">
-        <div>
-          <div class="temp" id="temp">--.-<span>°C</span></div>
-          <div class="sub" id="sub">목표 --°C · 대기 중</div>
-        </div>
-        <button id="btnPower" class="power" aria-label="전원">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg>
-          <span id="powerTxt">OFF</span>
-        </button>
-      </div>
+      <div class="temp" id="temp">--.-<span>°C</span></div>
+      <div class="sub" id="sub">정지</div>
       <div class="chips">
-        <div class="chip heat" id="cHeat">히터<b>OFF</b></div>
-        <div class="chip fan" id="cFan">팬<b>OFF</b></div>
-        <div class="chip uv" id="cUv">UV<b>OFF</b></div>
-        <div class="chip ok" id="cShoe">신발<b>없음</b></div>
-        <div class="chip warn" id="cTime">남은 시간<b>--</b></div>
-        <div class="chip bad" id="cSensor">센서<b>정상</b></div>
+        <div class="chip heat" id="cHeat">히터 출력<b>0%</b><div class="bar"><i id="heatBar"></i></div></div>
+        <div class="chip uv" id="cUv">UV 살균<b>OFF</b></div>
+        <div class="chip bad" id="cCut">과열 차단<b>정상</b></div>
+        <div class="chip ok" id="cSw1">신발 1 (SW1)<b>없음</b></div>
+        <div class="chip ok" id="cSw2">신발 2 (SW2)<b>없음</b></div>
+        <div class="chip bad" id="cSensor">온도 센서<b>정상</b></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="legend" style="margin:0 0 8px"><span><i style="background:var(--cyan)"></i>현재 온도</span><span><i style="background:var(--heat)"></i>목표 온도</span><span id="chartInfo" style="margin-left:auto">최근 5분</span></div>
-      <canvas id="chart"></canvas>
-    </div>
-
-    <div class="card">
-      <div class="label">목표 온도 <b id="spVal">55°C</b></div>
-      <input id="sp" type="range" min="35" max="70" step="1" value="55">
-    </div>
-
-    <div class="card">
-      <div class="label">건조 시간 <b id="durVal">30분</b></div>
-      <div class="seg" id="dur">
-        <button data-v="15">15분</button><button data-v="30">30분</button><button data-v="60">60분</button>
-        <button data-v="90">90분</button><button data-v="0">무제한</button>
+      <div class="modes">
+        <button class="mode low" id="mLow"><b>저온</b><small>40°C</small></button>
+        <button class="mode high" id="mHigh"><b>고온</b><small>50°C</small></button>
+        <button class="mode stop" id="mStop"><b>⏹ 정지</b><small>히터·UV 끄기</small></button>
       </div>
+      <div class="hint">켜져 있는 모드를 한 번 더 누르면 히터만 꺼져요. (본체 버튼과 동일)</div>
     </div>
 
     <div class="card toggle">
-      <div><b>UV 살균</b><p>신발이 감지되고 전원이 켜져 있을 때만 켜져요.</p></div>
+      <div><b>UV 살균</b><p>신발 두 짝(SW1·SW2)이 모두 감지될 때만 켜져요.</p></div>
       <label class="sw"><input id="uv" type="checkbox"><span></span></label>
+    </div>
+
+    <div class="card">
+      <div class="legend"><span><i style="background:var(--cyan)"></i>현재 온도</span><span><i style="background:var(--heat)"></i>목표 온도</span><span style="margin-left:auto">최근 5분</span></div>
+      <canvas id="chart"></canvas>
     </div>
   </div>
 
@@ -150,17 +137,18 @@ details summary{cursor:pointer;color:var(--muted);font-size:13px}
 </div>
 
 <script>
+/* 펌웨어 ShoeDryer_BLE.ino 와 같은 UUID / 데이터 형식 */
 var SERVICE = "9f8a0001-6b2c-4d1e-a3f5-1c2d3e4f5a6b";
 var CMD_UUID = "9f8a0002-6b2c-4d1e-a3f5-1c2d3e4f5a6b";
 var STATUS_UUID = "9f8a0003-6b2c-4d1e-a3f5-1c2d3e4f5a6b";
+var CUTOFF = 58;
 
 var $ = function (id) { return document.getElementById(id); };
 var device = null, cmdChar = null, demo = null, userDisconnect = false;
 var writeQueue = Promise.resolve();
-var hist = [];          // {t, temp, sp}
+var hist = [];
 var HIST_MS = 5 * 60 * 1000;
 var state = null;
-var spDragging = false;
 
 function log(msg) {
   var el = $("log");
@@ -176,14 +164,14 @@ function setConn(kind, text) {
   $("btnDemo").textContent = demo ? "데모 종료" : "🧪 데모 모드";
 }
 
-/* ---------- 상태 해석 (펌웨어 6바이트 형식) ---------- */
+/* STATUS 6바이트: [0-1]온도x10 [2]모드 [3]목표 [4]duty [5]flags */
 function decode(dv) {
-  var t10 = dv.getInt16(0, true), f = dv.getUint8(2);
+  var t10 = dv.getInt16(0, true), f = dv.getUint8(5);
   return {
     temp: t10 === -999 ? null : t10 / 10,
-    power: !!(f & 1), heater: !!(f & 2), fan: !!(f & 4), uv: !!(f & 8),
-    shoe: !!(f & 16), fault: !!(f & 32), uvWanted: !!(f & 64), cooling: !!(f & 128),
-    sp: dv.getUint8(3), rem: dv.getUint8(4), dur: dv.getUint8(5)
+    mode: dv.getUint8(2), target: dv.getUint8(3), duty: dv.getUint8(4),
+    uvWanted: !!(f & 1), uvActive: !!(f & 2), sw1: !!(f & 4), sw2: !!(f & 8),
+    fault: !!(f & 16), cutoff: !!(f & 32)
   };
 }
 
@@ -196,28 +184,24 @@ function chip(id, on, txt) {
 function render(s) {
   state = s;
   $("temp").innerHTML = (s.temp === null ? "--.-" : s.temp.toFixed(1)) + "<span>°C</span>";
-  var mode = s.power ? (s.heater ? "가열 중" : "온도 유지") : (s.cooling ? "냉각 중" : "대기 중");
-  $("sub").textContent = "목표 " + s.sp + "°C · " + mode;
-  $("btnPower").classList.toggle("on", s.power);
-  $("powerTxt").textContent = s.power ? "ON" : "OFF";
+  var modeName = ["정지", "저온 모드", "고온 모드"][s.mode] || "정지";
+  $("sub").innerHTML = s.mode ? "<b>" + modeName + "</b> · 목표 " + s.target + "°C" : "<b>정지</b> · 히터 꺼짐";
 
-  chip("cHeat", s.heater, s.heater ? "ON" : "OFF");
-  chip("cFan", s.fan, s.fan ? (s.cooling ? "냉각" : "ON") : "OFF");
-  chip("cUv", s.uv, s.uv ? "ON" : (s.uvWanted ? "대기" : "OFF"));
-  chip("cShoe", s.shoe, s.shoe ? "감지됨" : "없음");
-  var remTxt = !s.power ? "--" : (s.rem === 255 ? "무제한" : s.rem + "분");
-  chip("cTime", s.power, remTxt);
+  var pct = Math.round(s.duty / 255 * 100);
+  chip("cHeat", s.duty > 0, pct + "%");
+  $("heatBar").style.width = pct + "%";
+  chip("cUv", s.uvActive || s.uvWanted, s.uvActive ? "ON" : (s.uvWanted ? "대기" : "OFF"));
+  chip("cCut", s.cutoff, s.cutoff ? "차단 중" : "정상");
+  chip("cSw1", s.sw1, s.sw1 ? "감지됨" : "없음");
+  chip("cSw2", s.sw2, s.sw2 ? "감지됨" : "없음");
   chip("cSensor", s.fault, s.fault ? "오류!" : "정상");
 
-  if (!spDragging) { $("sp").value = s.sp; $("spVal").textContent = s.sp + "°C"; }
-  $("durVal").textContent = s.dur === 0 ? "무제한" : s.dur + "분";
-  Array.prototype.forEach.call($("dur").children, function (b) {
-    b.classList.toggle("sel", +b.dataset.v === s.dur);
-  });
+  $("mLow").classList.toggle("sel", s.mode === 1);
+  $("mHigh").classList.toggle("sel", s.mode === 2);
   $("uv").checked = s.uvWanted;
 
   var now = Date.now();
-  hist.push({ t: now, temp: s.temp, sp: s.sp });
+  hist.push({ t: now, temp: s.temp, target: s.mode ? s.target : null });
   while (hist.length && now - hist[0].t > HIST_MS) hist.shift();
   drawChart();
 }
@@ -226,14 +210,14 @@ function render(s) {
 function drawChart() {
   var cv = $("chart"), dpr = window.devicePixelRatio || 1;
   var w = cv.clientWidth, h = cv.clientHeight;
+  if (!w) return;
   if (cv.width !== w * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
   var g = cv.getContext("2d");
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
   g.clearRect(0, 0, w, h);
 
-  var pts = hist.filter(function (p) { return p.temp !== null; });
-  var lo = 20, hi = 80;
-  pts.forEach(function (p) { lo = Math.min(lo, p.temp - 3); hi = Math.max(hi, p.temp + 3); });
+  var lo = 20, hi = 70;
+  hist.forEach(function (p) { if (p.temp !== null) { lo = Math.min(lo, p.temp - 3); hi = Math.max(hi, p.temp + 3); } });
   var L = 34, R = 8, T = 8, B = 20, now = Date.now();
   var x = function (t) { return L + (w - L - R) * (1 - (now - t) / HIST_MS); };
   var y = function (v) { return T + (h - T - B) * (1 - (v - lo) / (hi - lo)); };
@@ -243,6 +227,11 @@ function drawChart() {
     g.beginPath(); g.moveTo(L, y(v)); g.lineTo(w - R, y(v)); g.stroke();
     g.fillText(v + "°", 4, y(v) + 4);
   }
+  /* 과열 차단선 58°C */
+  g.strokeStyle = "rgba(248,113,113,.5)"; g.setLineDash([3, 4]);
+  g.beginPath(); g.moveTo(L, y(CUTOFF)); g.lineTo(w - R, y(CUTOFF)); g.stroke(); g.setLineDash([]);
+  g.fillStyle = "#f87171"; g.fillText("차단 58°", w - R - 52, y(CUTOFF) - 4);
+  g.fillStyle = "#8fa0c4";
   ["-5분", "-4분", "-3분", "-2분", "-1분", "지금"].forEach(function (s, i) {
     var xx = L + (w - L - R) * i / 5;
     g.fillText(s, Math.min(xx - 10, w - 28), h - 4);
@@ -259,7 +248,7 @@ function drawChart() {
     });
     g.stroke(); g.setLineDash([]);
   }
-  line("sp", "#fb923c", [6, 5]);
+  line("target", "#fb923c", [6, 5]);
   line("temp", "#22d3ee");
 }
 window.addEventListener("resize", drawChart);
@@ -275,13 +264,10 @@ function send(cmd) {
   }).catch(function (e) { log("전송 실패: " + e.message); });
 }
 
-$("btnPower").onclick = function () { send(state && state.power ? "OFF" : "ON"); };
-$("sp").oninput = function () { spDragging = true; $("spVal").textContent = this.value + "°C"; };
-$("sp").onchange = function () { spDragging = false; send("SET:" + this.value); };
-Array.prototype.forEach.call($("dur").children, function (b) {
-  b.onclick = function () { send("TIME:" + b.dataset.v); };
-});
-$("uv").onchange = function () { send(this.checked ? "UV:1" : "UV:0"); };
+$("mLow").onclick  = function () { send(state && state.mode === 1 ? "HEATOFF" : "LOW"); };
+$("mHigh").onclick = function () { send(state && state.mode === 2 ? "HEATOFF" : "HIGH"); };
+$("mStop").onclick = function () { send("STOP"); };
+$("uv").onchange   = function () { send(this.checked ? "UV:1" : "UV:0"); };
 
 /* ---------- BLE 연결 ---------- */
 function onStatus(e) { render(decode(e.target.value)); }
@@ -310,9 +296,7 @@ async function reconnect() {
 
 $("btnConn").onclick = async function () {
   if (demo) stopDemo();
-  if (device && device.gatt.connected) {
-    userDisconnect = true; device.gatt.disconnect(); return;
-  }
+  if (device && device.gatt.connected) { userDisconnect = true; device.gatt.disconnect(); return; }
   if (!navigator.bluetooth) { $("noBle").style.display = "block"; return; }
   try {
     userDisconnect = false;
@@ -327,44 +311,40 @@ $("btnConn").onclick = async function () {
     });
     await connectGatt();
   } catch (e) {
-    log("연결 실패: " + e.message);
+    log("연결 실패: " + e.name + " - " + e.message);
     setConn("", e.name === "NotFoundError" ? "선택 취소됨" : "연결 실패");
   }
 };
 
-/* ---------- 데모 모드 (하드웨어 없이 화면 확인) ---------- */
+/* ---------- 데모 모드: 펌웨어 제어 로직을 그대로 흉내 ---------- */
 function startDemo() {
-  var s = { temp: 24, power: false, heater: false, fan: false, uv: false, shoe: true,
-            fault: false, uvWanted: false, cooling: false, sp: 55, rem: 0, dur: 30 };
-  var start = 0;
+  var s = { temp: 24, mode: 0, uvWanted: false, sw1: true, sw2: true };
+  function tick() {
+    var target = s.mode === 1 ? 40 : (s.mode === 2 ? 50 : 0), duty = 0;
+    if (s.mode) {
+      if (s.temp >= CUTOFF) duty = 0;
+      else if (s.temp >= target + 5) duty = 51;
+      else if (s.temp >= target) duty = 102;
+      else if (s.temp >= target - 5) duty = 153;
+      else duty = 255;
+    }
+    s.temp += duty / 255 * 1.2 - (s.temp - 24) * 0.02 + (Math.random() - 0.5) * 0.15;
+    render({ temp: s.temp, mode: s.mode, target: target, duty: duty,
+      uvWanted: s.uvWanted, uvActive: s.uvWanted && s.sw1 && s.sw2,
+      sw1: s.sw1, sw2: s.sw2, fault: false, cutoff: s.temp >= CUTOFF });
+  }
   demo = {
     handle: function (c) {
-      if (c === "ON") { s.power = true; s.cooling = false; start = Date.now(); }
-      else if (c === "OFF") { s.power = false; s.cooling = true; }
-      else if (c.indexOf("SET:") === 0) s.sp = +c.slice(4);
-      else if (c.indexOf("TIME:") === 0) { s.dur = +c.slice(5); start = Date.now(); }
+      if (c === "LOW") s.mode = 1;
+      else if (c === "HIGH") s.mode = 2;
+      else if (c === "HEATOFF") s.mode = 0;
+      else if (c === "STOP") { s.mode = 0; s.uvWanted = false; }
       else if (c === "UV:1") s.uvWanted = true;
       else if (c === "UV:0") s.uvWanted = false;
       tick();
     },
-    timer: setInterval(function () { tick(); }, 1000)
+    timer: setInterval(tick, 1000)
   };
-  function tick() {
-    if (s.power) {
-      if (s.temp <= s.sp - 3) s.heater = true; else if (s.temp >= s.sp) s.heater = false;
-      s.fan = true; s.uv = s.uvWanted && s.shoe;
-      var left = s.dur ? s.dur * 60000 - (Date.now() - start) : -1;
-      s.rem = s.dur ? Math.max(0, Math.ceil(left / 60000)) : 255;
-      if (s.dur && left <= 0) { s.power = false; s.cooling = true; }
-    } else {
-      s.heater = false; s.uv = false; s.rem = 0;
-      if (s.cooling && s.temp < 40) s.cooling = false;
-      s.fan = s.cooling;
-    }
-    s.temp += s.heater ? 0.9 : (s.fan ? -0.5 : -0.15);
-    s.temp = Math.max(22, s.temp) + (Math.random() - 0.5) * 0.2;
-    render(JSON.parse(JSON.stringify(s)));
-  }
   setConn("on", "데모 모드");
   log("데모 모드 시작");
   tick();
@@ -384,5 +364,3 @@ drawChart();
 </script>
 </body>
 </html>
-
-</body></html>
